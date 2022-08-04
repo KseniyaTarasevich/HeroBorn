@@ -1792,7 +1792,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   labelText: Collect all 4 items and win your freedom!
-  maxItems: 4
+  maxItems: 1
+  showWinScreen: 0
 --- !u!1001 &2903409999727342128
 PrefabInstance:
   m_ObjectHideFlags: 0
