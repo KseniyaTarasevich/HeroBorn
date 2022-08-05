@@ -1,13 +1,29 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using CustomExtensions;
 
-public class GameBehavior : MonoBehaviour
+public class GameBehavior : MonoBehaviour, IManager
 {
     public string labelText = "Collect all 4 items and win your freedom!";
     public int maxItems = 4;
     public bool showWinScreen = false;
+    public bool showLossScreen = false;
     private int _itemsCollected = 0;
     private int _playerHP = 10;
+    private string _state;
+
+    public string State
+    {
+        get
+        {
+            return _state;
+        }
+
+        set
+        {
+            _state = value;
+        }
+    }
 
     public int Items
     {
@@ -23,10 +39,11 @@ public class GameBehavior : MonoBehaviour
 
             if (_itemsCollected >= maxItems)
             {
-                labelText = "You're found all items!";
+               
+                //labelText = "You're found all items!";
                 showWinScreen = true;
-
-                Time.timeScale = 0f;
+                SetText("You're found all items!");
+                //Time.timeScale = 0f;
             }
 
             else
@@ -46,8 +63,28 @@ public class GameBehavior : MonoBehaviour
         set
         {
             _playerHP = value;
-            Debug.LogFormat("Lives: {0}", _playerHP);
+
+            if (_playerHP <= 0)
+            {
+               
+                //labelText = "You want another life with that?";
+                showLossScreen = true;
+                SetText("You want another life with that?");
+                //Time.timeScale = 0;
+            }
+            else
+            {
+                labelText = "Ouch... that's got hurt.";
+            }
+
+            //Debug.LogFormat("Lives: {0}", _playerHP);
         }
+    }
+
+    private void SetText(string newLabelText)
+    {
+        labelText = newLabelText;
+              Time.timeScale = 0f;
     }
 
     private void OnGUI()
@@ -58,11 +95,38 @@ public class GameBehavior : MonoBehaviour
 
         if (showWinScreen)
         {
-            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "YOU WON!")) 
+            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "YOU WON!"))
             {
-                SceneManager.LoadScene(0);
-                Time.timeScale = 1.0f;
+                //RestartLevel();
+                Utilities.RestartLevel(0);
+            }
+        }
+
+        if (showLossScreen)
+        {
+            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "You lose..."))
+            {
+                //RestartLevel();
+                Utilities.RestartLevel();
             }
         }
     }
+
+    void Start()
+    {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
+        _state = "Manager initialized...";
+        _state.FancyDebug();
+        Debug.Log(_state);
+    }
+
+    //void RestartLevel()
+    //{
+    //    SceneManager.LoadScene(0);
+    //    Time.timeScale = 1f;
+    //}
 }
