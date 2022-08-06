@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 using CustomExtensions;
 
 public class GameBehavior : MonoBehaviour, IManager
@@ -11,6 +12,8 @@ public class GameBehavior : MonoBehaviour, IManager
     private int _itemsCollected = 0;
     private int _playerHP = 10;
     private string _state;
+
+    public Stack<string> lookStack = new Stack<string>();
 
     public string State
     {
@@ -39,7 +42,7 @@ public class GameBehavior : MonoBehaviour, IManager
 
             if (_itemsCollected >= maxItems)
             {
-               
+
                 //labelText = "You're found all items!";
                 showWinScreen = true;
                 SetText("You're found all items!");
@@ -66,7 +69,7 @@ public class GameBehavior : MonoBehaviour, IManager
 
             if (_playerHP <= 0)
             {
-               
+
                 //labelText = "You want another life with that?";
                 showLossScreen = true;
                 SetText("You want another life with that?");
@@ -84,7 +87,7 @@ public class GameBehavior : MonoBehaviour, IManager
     private void SetText(string newLabelText)
     {
         labelText = newLabelText;
-              Time.timeScale = 0f;
+        Time.timeScale = 0f;
     }
 
     private void OnGUI()
@@ -122,8 +125,23 @@ public class GameBehavior : MonoBehaviour, IManager
         _state = "Manager initialized...";
         _state.FancyDebug();
         Debug.Log(_state);
+
+        lookStack.Push("Sword of Doom");
+        lookStack.Push("HP+");
+        lookStack.Push("Golden Key");
+        lookStack.Push("Winged Boot");
+        lookStack.Push("Mythril Bracers");
     }
 
+    public void PrintLootReport()
+    {
+        var currentItem = lookStack.Pop();
+        var nextitem = lookStack.Peek();
+
+        Debug.LogFormat("You got a {0}! You've got a good chance of finding a {1} next!", currentItem, nextitem);
+
+        Debug.LogFormat("There are {0} random loot times waiting for you!", lookStack.Count);
+    }
     //void RestartLevel()
     //{
     //    SceneManager.LoadScene(0);

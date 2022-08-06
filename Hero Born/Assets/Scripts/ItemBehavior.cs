@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemBehavior : MonoBehaviour
@@ -17,8 +15,9 @@ public class ItemBehavior : MonoBehaviour
         {
             Destroy(this.gameObject);
             Debug.Log("Item Collected!");
-
-            gameManager.Items += 1;
         }
+        gameManager.Items += 1;
+
+        gameManager.PrintLootReport();
     }
 }
